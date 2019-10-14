@@ -1,10 +1,15 @@
 // CRUD Create Read Update Delete
-
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
+const ObjectID = mongodb.ObjectID;
 
 const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
+
+// creating our own IDs (in this case it must be added as a field in each document)
+const id = new ObjectID();
+console.log(id);
+console.log(id.getTimestamp());
 
 MongoClient.connect(
   connectionURL,
@@ -21,8 +26,8 @@ MongoClient.connect(
 
     // db.collection("users").insertOne(
     //   {
-    //     name: "Enzo",
-    //     age: 25
+    //     name: "Oliver",
+    //     age: 33
     //   },
     //   (error, result) => {
     //     if (error) {
@@ -34,44 +39,44 @@ MongoClient.connect(
     //   }
     // );
 
-    db.collection("users").insertMany(
-      [
-        {
-          name: "Dada",
-          age: 28
-        },
-        {
-          name: "Life",
-          age: 18
-        }
-      ],
-      (error, result) => {
-        if (error) {
-          return console.log("Unable to insert documents");
-        }
+    // db.collection("users").insertMany(
+    //   [
+    //     {
+    //       name: "Dada",
+    //       age: 28
+    //     },
+    //     {
+    //       name: "Life",
+    //       age: 18
+    //     }
+    //   ],
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log("Unable to insert documents");
+    //     }
 
-        console.log(result.ops);
-      }
-    );
+    //     console.log(result.ops);
+    //   }
+    // );
 
-    db.collection("tasks").insertMany(
-      [
-        {
-          description: "Do yoga",
-          completed: false
-        },
-        {
-          description: "View tutorials",
-          completed: true
-        }
-      ],
-      (error, result) => {
-        if (error) {
-          return console.log("Unable to insert tasks");
-        }
+    // db.collection("tasks").insertMany(
+    //   [
+    //     {
+    //       description: "Do yoga",
+    //       completed: false
+    //     },
+    //     {
+    //       description: "View tutorials",
+    //       completed: true
+    //     }
+    //   ],
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log("Unable to insert tasks");
+    //     }
 
-        console.log(result.ops);
-      }
-    );
+    //     console.log(result.ops);
+    //   }
+    // );
   }
 );
