@@ -19,9 +19,59 @@ MongoClient.connect(
     // mongodb will create for us.
     const db = client.db(databaseName);
 
-    db.collection("users").insertOne({
-      name: "Enzo",
-      age: 25
-    });
+    // db.collection("users").insertOne(
+    //   {
+    //     name: "Enzo",
+    //     age: 25
+    //   },
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log("Unable to insert user");
+    //     }
+
+    //     // ops contains all of the documents that were inserted (array of documents)
+    //     console.log(result.ops);
+    //   }
+    // );
+
+    db.collection("users").insertMany(
+      [
+        {
+          name: "Dada",
+          age: 28
+        },
+        {
+          name: "Life",
+          age: 18
+        }
+      ],
+      (error, result) => {
+        if (error) {
+          return console.log("Unable to insert documents");
+        }
+
+        console.log(result.ops);
+      }
+    );
+
+    db.collection("tasks").insertMany(
+      [
+        {
+          description: "Do yoga",
+          completed: false
+        },
+        {
+          description: "View tutorials",
+          completed: true
+        }
+      ],
+      (error, result) => {
+        if (error) {
+          return console.log("Unable to insert tasks");
+        }
+
+        console.log(result.ops);
+      }
+    );
   }
 );
