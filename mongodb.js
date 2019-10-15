@@ -24,33 +24,19 @@ MongoClient.connect(
     // mongodb will create for us.
     const db = client.db(databaseName);
 
-    // db.collection("users")
-    //   .updateOne(
-    //     { _id: new ObjectID("5da4e69d4b9a5706783215c2") },
-    //     {
-    //       $inc: {
-    //         age: 30
-    //       }
-    //     }
-    //   )
-    //   .then(result => {
-    //     console.log(result);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    db.collection("users")
+      .deleteMany({ age: 28 })
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
     db.collection("tasks")
-      .updateMany(
-        { completed: false },
-        {
-          $set: {
-            completed: true
-          }
-        }
-      )
+      .deleteOne({ description: "Do yoga" })
       .then(result => {
-        console.log(result.modifiedCount);
+        console.log(result);
       })
       .catch(error => {
         console.log(error);
