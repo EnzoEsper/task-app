@@ -7,9 +7,9 @@ const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "task-manager";
 
 // creating our own IDs (in this case it must be added as a field in each document)
-const id = new ObjectID();
-console.log(id);
-console.log(id.getTimestamp());
+// const id = new ObjectID();
+// console.log(id);
+// console.log(id.getTimestamp());
 
 MongoClient.connect(
   connectionURL,
@@ -24,59 +24,36 @@ MongoClient.connect(
     // mongodb will create for us.
     const db = client.db(databaseName);
 
-    // db.collection("users").insertOne(
-    //   {
-    //     name: "Oliver",
-    //     age: 33
-    //   },
-    //   (error, result) => {
-    //     if (error) {
-    //       return console.log("Unable to insert user");
-    //     }
-
-    //     // ops contains all of the documents that were inserted (array of documents)
-    //     console.log(result.ops);
-    //   }
-    // );
-
-    // db.collection("users").insertMany(
-    //   [
+    // db.collection("users")
+    //   .updateOne(
+    //     { _id: new ObjectID("5da4e69d4b9a5706783215c2") },
     //     {
-    //       name: "Dada",
-    //       age: 28
-    //     },
-    //     {
-    //       name: "Life",
-    //       age: 18
+    //       $inc: {
+    //         age: 30
+    //       }
     //     }
-    //   ],
-    //   (error, result) => {
-    //     if (error) {
-    //       return console.log("Unable to insert documents");
-    //     }
+    //   )
+    //   .then(result => {
+    //     console.log(result);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
 
-    //     console.log(result.ops);
-    //   }
-    // );
-
-    // db.collection("tasks").insertMany(
-    //   [
-    //     {
-    //       description: "Do yoga",
-    //       completed: false
-    //     },
-    //     {
-    //       description: "View tutorials",
-    //       completed: true
-    //     }
-    //   ],
-    //   (error, result) => {
-    //     if (error) {
-    //       return console.log("Unable to insert tasks");
-    //     }
-
-    //     console.log(result.ops);
-    //   }
-    // );
+    db.collection("tasks")
+      .updateMany(
+        { completed: false },
+        {
+          $set: {
+            completed: true
+          }
+        }
+      )
+      .then(result => {
+        console.log(result.modifiedCount);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 );
