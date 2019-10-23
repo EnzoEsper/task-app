@@ -25,6 +25,38 @@ app.post("/users", (req, res) => {
     });
 });
 
+// fetching all the users
+app.get("/users", (req, res) => {
+  // this is going to fetch all the users stored in the db
+  User.find({})
+    .then(users => {
+      res.send(users);
+    })
+    .catch(e => {
+      // Internal server error
+      res.status(500).send();
+    });
+});
+
+// fetching a individual user by id
+app.get("/users/:id", (req, res) => {
+  const _id = req.params.id;
+
+  User.findById(_id)
+    .then(user => {
+      // Mongo db not consider a faillure if dont get any result back when were
+      // looking for something -> that is consider a success (even is no matches, returns nothing)
+      if (!user) {
+        return res.status(404).send();
+      }
+
+      res.send(user);
+    })
+    .catch(e => {
+      res.status(500).send(e);
+    });
+});
+
 // creating a task
 app.post("/tasks", (req, res) => {
   const task = new Task(req.body);
