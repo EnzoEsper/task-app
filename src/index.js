@@ -89,6 +89,7 @@ app.patch("/users/:id", async (req, res) => {
     res.status(400).send(error);
   }
 });
+
 // creating a task
 app.post("/tasks", async (req, res) => {
   const task = new Task(req.body);
@@ -125,6 +126,35 @@ app.get("/tasks/:id", async (req, res) => {
     res.send(task);
   } catch (error) {
     res.status(500).send();
+  }
+});
+
+// Updating a task
+app.patch("/tasks/:id", async (req, res) => {
+  _id = req.params.id;
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["description", "completed"];
+  const isValidOperation = updates.every(update => {
+    return allowedUpdates.includes(update);
+  });
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid Updates!" });
+  }
+
+  try {
+    const task = await Task.findByIdAndUpdate(_id, req.body, {
+      runValidators: true,
+      new: true
+    });
+
+    if (!task) {
+      return send.status(404).send;
+    }
+
+    res.send(task);
+  } catch (error) {
+    res.status(400).send(error);
   }
 });
 
