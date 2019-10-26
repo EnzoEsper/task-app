@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
     trim: true,
     lowercase: true,
@@ -44,8 +45,28 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Using the middleware. The function needs to be a standard function (not an arrow function)
-// because the this binding plays an important role and ARROW FUNCTIONS DONT BIND THIS
+// Function to compare the email and the password of an user that tries to log in
+// when setting up a value in userSchema.statics then we can accesing it directly on the
+// model once we hace acces to it
+userSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
+    throw new Error("Unable to login");
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error("Unable to login");
+  }
+
+  return user;
+};
+
+// Using the middleware to HASHING THE TEXT PASSWORD BEFORE SAVING.
+// The function needs to be a standard function (not an arrow function) because the
+// this binding plays an important role and ARROW FUNCTIONS DONT BIND THIS
 userSchema.pre("save", async function(next) {
   // the value of this is equal to the document that is being saved
   const user = this; // this is not neccesary but more easy to understand
