@@ -66,10 +66,21 @@ router.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    const user = await User.findByIdAndUpdate(_id, req.body, {
-      new: true, // returns the new user as opposed to the existing one that was found
-      runValidators: true
+    // the findByIdAndUpdate bypasses mongoose and performs a direct operation to the db
+    // so that the middleware dont executes when an user is updated
+    // const user = await User.findByIdAndUpdate(_id, req.body, {
+    //   new: true, // returns the new user as opposed to the existing one that was found
+    //   runValidators: true
+    // });
+
+    // We adjust the code to this, in order to get the middleware being executed
+    const user = await User.findById(_id);
+
+    updates.forEach(update => {
+      user[update] = req.body[update];
     });
+
+    await user.save();
 
     if (!user) {
       return res.status(404).send();
