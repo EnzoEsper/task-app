@@ -33,7 +33,8 @@ router.post("/users/login", async (req, res) => {
       req.body.password
     );
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    // getPublicProfile returns an user object without the array of tokens and the pass
+    res.send({ user: user.getPublicProfile(), token });
   } catch (error) {
     res.status(400).send();
   }

@@ -54,6 +54,17 @@ const userSchema = new mongoose.Schema({
   ]
 });
 
+// function to hide the private data that is returned to an user such as the pass or tokens
+userSchema.methods.getPublicProfile = function() {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 // METHODS ARE ACCESIBLE ON THE INSTANCES -> a.k.a. INSTANCE METHODS
 // Using standard function since we are goonna need to use the this bind
 userSchema.methods.generateAuthToken = async function() {
