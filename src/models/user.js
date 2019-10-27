@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // Assing the user object to userSchema. This is going to allow us to take adventage
 // of the middlewares. When we passing the object as a second argument mongoose coverts
@@ -42,9 +43,31 @@ const userSchema = new mongoose.Schema({
       }
     },
     default: 0
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
 
+// METHODS ARE ACCESIBLE ON THE INSTANCES -> a.k.a. INSTANCE METHODS
+// Using standard function since we are goonna need to use the this bind
+//
+userSchema.methods.generateAuthToken = async function() {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, "thisisthetoken");
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return token;
+};
+
+// STATICS METHODS ARE ACCESIBLE ON THE MODEL -> a.k.a. MODEL METHODS
 // Function to compare the email and the password of an user that tries to log in
 // when setting up a value in userSchema.statics then we can accesing it directly on the
 // model once we hace acces to it

@@ -30,11 +30,13 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    res.send(user);
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (error) {
     res.status(400).send();
   }
 });
+
 // fetching all the users
 router.get("/users", async (req, res) => {
   // this is going to fetch all the users stored in the db
