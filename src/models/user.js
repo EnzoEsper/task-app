@@ -55,7 +55,8 @@ const userSchema = new mongoose.Schema({
 });
 
 // function to hide the private data that is returned to an user such as the pass or tokens
-userSchema.methods.getPublicProfile = function() {
+// This function runs even though we never call it explicitely
+userSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
 

@@ -32,6 +32,7 @@ app.listen(port, () => {
   console.log("Server is up on port", port);
 });
 
+// JSON WEB TOKEN PLAYGROUND
 // const jwt = require("jsonwebtoken");
 
 // const myFunction = async () => {
@@ -46,3 +47,19 @@ app.listen(port, () => {
 // };
 
 // myFunction();
+
+// // toJSON FUNCTION PLAYGROUND
+// const pet = {
+//   name: "Flipper"
+// };
+
+// // when we setup toJSON it is gonna get called whenever the object gets stringified
+// // so, we can manipulate what exactly comes back when we stringify an object by returning
+// // what we want from here
+// // NODEMON STRINGIFY THE OBJECTS IMPLICITELY SO THE FUNCTION userSchema.methods.toJSON in
+// // the models executes ever, and we hide the data that we want
+// pet.toJSON = function() {
+//   return {};
+// };
+
+// console.log(JSON.stringify(pet));
