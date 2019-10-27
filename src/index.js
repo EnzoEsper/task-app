@@ -63,3 +63,21 @@ app.listen(port, () => {
 // };
 
 // console.log(JSON.stringify(pet));
+
+// USER-TASK RELATIONSHIP PLAYGROUND
+// const Task = require("./models/task");
+// const User = require("./models/user");
+
+// const main = async () => {
+//   // const task = await Task.findById("5db60b7d2f4cd52cf0caaa32");
+//   // This is gonna go of and its gona find the user that is associated with this task
+//   // and task.owner will now be the entire document of user as opossed to just being the id
+//   // await task.populate("owner").execPopulate();
+//   // console.log(task.owner);
+
+//   const user = await User.findById("5db60a8db9f1fb168c57c39c");
+//   await user.populate("tasks").execPopulate();
+//   console.log(user.tasks);
+// };
+
+// main();

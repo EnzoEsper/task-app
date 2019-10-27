@@ -54,6 +54,13 @@ const userSchema = new mongoose.Schema({
   ]
 });
 
+// Virtual property -> is not data stored in the db, is a relationship btw 2 entities (User and tasks)
+userSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id", // the name of the local field that creates the relationship
+  foreignField: "owner" // the name of the field of the other thing that going to create the relationship
+});
+
 // function to hide the private data that is returned to an user such as the pass or tokens
 // This function runs even though we never call it explicitely
 userSchema.methods.toJSON = function() {
