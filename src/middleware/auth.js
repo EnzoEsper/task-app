@@ -18,6 +18,9 @@ const auth = async (req, res, next) => {
     if (!user) {
       throw new Error();
     }
+
+    // we also add the token to the request so it can be used by the route handler for logout
+    req.token = token;
     // if the user exists, we store the user to the request so the route handler dont have to fetch it again and save resources
     req.user = user;
     next();

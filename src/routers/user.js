@@ -39,6 +39,33 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
+// logging out the user from a individual session
+router.post("/users/logout", auth, async (req, res) => {
+  try {
+    // removing the corresponding token from the array of tokens of an user and save it
+    req.user.tokens = req.user.tokens.filter(token => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+
+    res.send();
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
+// logging out the user from all sessions removing all the tokenks from the array
+router.post("/users/logoutAll", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+
+    res.send();
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
 // returns the profile of an user when is authenticated
 // passing the middleware as a second arg
 router.get("/users/me", auth, async (req, res) => {
