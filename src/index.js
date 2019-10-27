@@ -9,7 +9,7 @@ const taskRouter = require("./routers/task");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// REGISTERING MIDDLEWARE
+// REGISTERING MIDDLEWARE TEST
 // app.use((req, res, next) => {
 //   if (req.method === "GET") {
 //     res.send("GET requests are disabled");
@@ -18,9 +18,9 @@ const port = process.env.PORT || 3000;
 //   }
 // });
 
-app.use((req, res, next) => {
-  res.status(503).send("This site is in maintenance. Try it later.");
-});
+// app.use((req, res, next) => {
+//   res.status(503).send("This site is in maintenance. Try it later.");
+// });
 
 // Automatically parse incoming JSON'S to an object
 app.use(express.json());

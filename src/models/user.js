@@ -56,7 +56,6 @@ const userSchema = new mongoose.Schema({
 
 // METHODS ARE ACCESIBLE ON THE INSTANCES -> a.k.a. INSTANCE METHODS
 // Using standard function since we are goonna need to use the this bind
-//
 userSchema.methods.generateAuthToken = async function() {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "thisisthetoken");
