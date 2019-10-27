@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Task = require("./task");
 
 // Assing the user object to userSchema. This is going to allow us to take adventage
 // of the middlewares. When we passing the object as a second argument mongoose coverts
@@ -120,6 +121,15 @@ userSchema.pre("save", async function(next) {
   }
 
   // when we are done we call next to proceed to save te user
+  next();
+});
+
+// Middleware to delete the user tasks when user is removed
+userSchema.pre("remove", async function(next) {
+  const user = this;
+
+  await Task.deleteMany({ owner: user._id });
+
   next();
 });
 
