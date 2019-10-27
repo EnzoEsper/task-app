@@ -50,7 +50,7 @@ router.get("/tasks/:id", auth, async (req, res) => {
 });
 
 // Updating a task
-router.patch("/tasks/:id", async (req, res) => {
+router.patch("/tasks/:id", auth, async (req, res) => {
   _id = req.params.id;
   const updates = Object.keys(req.body);
   const allowedUpdates = ["description", "completed"];
@@ -69,17 +69,18 @@ router.patch("/tasks/:id", async (req, res) => {
     // });
 
     // change how tasks are updated in order to trigger some middleware in the future
-    const task = await Task.findById(_id);
-    updates.forEach(update => {
-      task[update] = req.body[update];
-    });
 
-    await task.save();
+    //const task = await Task.findById(_id);
+    const task = await Task.findOne({ _id, owner: req.user._id });
 
     if (!task) {
       return send.status(404).send;
     }
 
+    updates.forEach(update => {
+      task[update] = req.body[update];
+    });
+    await task.save();
     res.send(task);
   } catch (error) {
     res.status(400).send(error);
