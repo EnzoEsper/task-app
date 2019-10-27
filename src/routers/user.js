@@ -83,8 +83,7 @@ router.get("/users/me", auth, async (req, res) => {
 });
 
 // Updating a user
-router.patch("/users/:id", async (req, res) => {
-  const _id = req.params.id;
+router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
   const isValidOperation = updates.every(update => {
@@ -96,27 +95,13 @@ router.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    // the findByIdAndUpdate bypasses mongoose and performs a direct operation to the db
-    // so that the middleware dont executes when an user is updated
-    // const user = await User.findByIdAndUpdate(_id, req.body, {
-    //   new: true, // returns the new user as opposed to the existing one that was found
-    //   runValidators: true
-    // });
-
-    // We adjust the code to this, in order to get the middleware being executed
-    const user = await User.findById(_id);
-
     updates.forEach(update => {
-      user[update] = req.body[update];
+      req.user[update] = req.body[update];
     });
 
-    await user.save();
+    await req.user.save();
 
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(user);
+    res.send(req.user);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -154,6 +139,46 @@ module.exports = router;
 // });
 
 // Updating a user -> REFACTORED to "/users/me"
+// router.patch("/users/:id", async (req, res) => {
+//   const _id = req.params.id;
+//   const updates = Object.keys(req.body);
+//   const allowedUpdates = ["name", "email", "password", "age"];
+//   const isValidOperation = updates.every(update => {
+//     return allowedUpdates.includes(update);
+//   });
+
+//   if (!isValidOperation) {
+//     return res.status(400).send({ error: "Invalid Updates!" });
+//   }
+
+//   try {
+//     // the findByIdAndUpdate bypasses mongoose and performs a direct operation to the db
+//     // so that the middleware dont executes when an user is updated
+//     // const user = await User.findByIdAndUpdate(_id, req.body, {
+//     //   new: true, // returns the new user as opposed to the existing one that was found
+//     //   runValidators: true
+//     // });
+
+//     // We adjust the code to this, in order to get the middleware being executed
+//     const user = await User.findById(_id);
+
+//     updates.forEach(update => {
+//       user[update] = req.body[update];
+//     });
+
+//     await user.save();
+
+//     if (!user) {
+//       return res.status(404).send();
+//     }
+
+//     res.send(user);
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// });
+
+// Updating a user -> REFACTORED TO "users/me"
 // router.patch("/users/:id", async (req, res) => {
 //   const _id = req.params.id;
 //   const updates = Object.keys(req.body);
