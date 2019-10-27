@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
+const auth = require("../middleware/auth");
 const router = new express.Router();
 
 // creating an user
@@ -38,15 +39,19 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
-// fetching all the users
-router.get("/users", async (req, res) => {
+// returns the profile of an user when is authenticated
+// passing the middleware as a second arg
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
+
+  // this code was user to fetch all users and only for practice some REST functionallity
   // this is going to fetch all the users stored in the db
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (error) {
-    res.status(500).send();
-  }
+  // try {
+  //   const users = await User.find({});
+  //   res.send(users);
+  // } catch (error) {
+  //   res.status(500).send();
+  // }
 });
 
 // fetching a individual user by id
