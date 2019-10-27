@@ -82,24 +82,6 @@ router.get("/users/me", auth, async (req, res) => {
   // }
 });
 
-// fetching a individual user by id
-router.get("/users/:id", async (req, res) => {
-  const _id = req.params.id;
-  try {
-    // Mongo db not consider a faillure if dont get any result back when were
-    // looking for something -> that is consider a success (even is no matches, returns nothing)
-    const user = await User.findById(_id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(user);
-  } catch (error) {
-    res.status(500).send();
-  }
-});
-
 // Updating a user
 router.patch("/users/:id", async (req, res) => {
   const _id = req.params.id;
@@ -140,21 +122,73 @@ router.patch("/users/:id", async (req, res) => {
   }
 });
 
-// deleting a user
-router.delete("/users/:id", async (req, res) => {
-  const _id = req.params.id;
-
+// deleting user profile
+router.delete("/users/me", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(_id);
-
-    if (!user) {
-      res.status(404).send();
-    }
-
-    res.send(user);
+    await req.user.remove();
+    res.send(req.user);
   } catch (error) {
     res.status(500).send();
   }
 });
 
 module.exports = router;
+
+// THIS WAS DELETED BC AN USER SHOULDNT GET DATA FROM ANOTHER USER
+// fetching a individual user by id
+// router.get("/users/:id", async (req, res) => {
+//   const _id = req.params.id;
+//   try {
+//     // Mongo db not consider a faillure if dont get any result back when were
+//     // looking for something -> that is consider a success (even is no matches, returns nothing)
+//     const user = await User.findById(_id);
+
+//     if (!user) {
+//       return res.status(404).send();
+//     }
+
+//     res.send(user);
+//   } catch (error) {
+//     res.status(500).send();
+//   }
+// });
+
+// Updating a user -> REFACTORED to "/users/me"
+// router.patch("/users/:id", async (req, res) => {
+//   const _id = req.params.id;
+//   const updates = Object.keys(req.body);
+//   const allowedUpdates = ["name", "email", "password", "age"];
+//   const isValidOperation = updates.every(update => {
+//     return allowedUpdates.includes(update);
+//   });
+
+//   if (!isValidOperation) {
+//     return res.status(400).send({ error: "Invalid Updates!" });
+//   }
+
+//   try {
+//     // the findByIdAndUpdate bypasses mongoose and performs a direct operation to the db
+//     // so that the middleware dont executes when an user is updated
+//     // const user = await User.findByIdAndUpdate(_id, req.body, {
+//     //   new: true, // returns the new user as opposed to the existing one that was found
+//     //   runValidators: true
+//     // });
+
+//     // We adjust the code to this, in order to get the middleware being executed
+//     const user = await User.findById(_id);
+
+//     updates.forEach(update => {
+//       user[update] = req.body[update];
+//     });
+
+//     await user.save();
+
+//     if (!user) {
+//       return res.status(404).send();
+//     }
+
+//     res.send(user);
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// });
