@@ -7,53 +7,58 @@ const Task = require("./task");
 // Assing the user object to userSchema. This is going to allow us to take adventage
 // of the middlewares. When we passing the object as a second argument mongoose coverts
 // it to a schema anyways
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("The email is not valid");
-      }
-    }
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 7,
-    validate(value) {
-      if (value.toLowerCase().includes("password")) {
-        throw new Error(`Password cannot contain "password"`);
-      }
-    }
-  },
-  age: {
-    type: Number,
-    validate(value) {
-      if (value < 0) {
-        throw new Error("Age must be greater than zero");
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("The email is not valid");
+        }
       }
     },
-    default: 0
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 7,
+      validate(value) {
+        if (value.toLowerCase().includes("password")) {
+          throw new Error(`Password cannot contain "password"`);
+        }
       }
-    }
-  ]
-});
+    },
+    age: {
+      type: Number,
+      validate(value) {
+        if (value < 0) {
+          throw new Error("Age must be greater than zero");
+        }
+      },
+      default: 0
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
+      }
+    ]
+  },
+  {
+    timestamps: true
+  }
+);
 
 // Virtual property -> is not data stored in the db, is a relationship btw 2 entities (User and tasks)
 userSchema.virtual("tasks", {
