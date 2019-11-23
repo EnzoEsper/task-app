@@ -154,6 +154,22 @@ router.delete("/users/me/avatar", auth, async (req, res) => {
   res.send();
 });
 
+// fetching an user avatar
+router.get("/users/:id/avatar", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+
+    res.set("Content-Type", "image/jpg");
+    res.send(user.avatar);
+  } catch (error) {
+    res.status(404).send();
+  }
+});
+
 module.exports = router;
 
 // THIS WAS DELETED BC AN USER SHOULDNT GET DATA FROM ANOTHER USER
