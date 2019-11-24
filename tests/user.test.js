@@ -71,3 +71,19 @@ test("Should not get profile for unauthenticated user", async () => {
     .send()
     .expect(401);
 });
+
+// testing the endpoint to deleting an user account (requires auth)
+test("Should delete the account for authenticated user", async () => {
+  await request(app)
+    .delete("/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(200);
+});
+
+test("Should not delete the account for unauthenticated user", async () => {
+  await request(app)
+    .delete("/users/me")
+    .send()
+    .expect(401);
+});
