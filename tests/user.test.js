@@ -119,4 +119,10 @@ test("Should upload avatar image", async () => {
     .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
     .attach("avatar", "tests/fixtures/profile-pic.jpg")
     .expect(200);
+
+  const user = await User.findById(userOneId);
+  // toEqual() does not use the === operator and uses an algorithm, expect({}).toEqual({}) returns true
+  // expect.any() this takes the constructor function for some sort of type and is going to check if what you are looking at is indeed of that type
+  expect(user.avatar).toEqual(expect.any(Buffer));
+  // expect({}).toBe({}) // this returns false because uses the === operator and the objects are in diferents space in memory
 });
