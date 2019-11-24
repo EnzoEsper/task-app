@@ -1,4 +1,5 @@
 node_modules
 avatars
 images
-.env
+dev.env
+test.env
