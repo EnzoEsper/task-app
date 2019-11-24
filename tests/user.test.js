@@ -126,3 +126,26 @@ test("Should upload avatar image", async () => {
   expect(user.avatar).toEqual(expect.any(Buffer));
   // expect({}).toBe({}) // this returns false because uses the === operator and the objects are in diferents space in memory
 });
+
+test("Should update valid user fields", async () => {
+  await request(app)
+    .patch("/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      name: "Gustavo"
+    })
+    .expect(200);
+
+  const user = await User.findById(userOneId);
+  expect(user.name).toEqual("Gustavo");
+});
+
+test("Should not update invalid user fields", async () => {
+  await request(app)
+    .patch("/users/me")
+    .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      height: 18.3
+    })
+    .expect(400);
+});
